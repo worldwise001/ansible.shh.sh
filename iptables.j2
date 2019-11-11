@@ -1,0 +1,26 @@
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:closed - [0:0]
+:filtered - [0:0]
+:local - [0:0]
+:open - [0:0]
+:shh - [0:0]
+:home - [0:0]
+:sshguard - [0:0]
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -s 127.0.0.1/32 -j local
+-A local -j ACCEPT
+-A open -j ACCEPT
+-A shh -j ACCEPT
+-A home -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 80 -j open
+-A INPUT -p tcp -m tcp --dport 443 -j open
+-A INPUT -p tcp -m tcp --dport 22 -j sshguard
+-A INPUT -p tcp -m tcp --dport 22 -j open
+-A INPUT -p tcp -m tcp -j closed
+-A INPUT -p udp -j filtered
+-A closed -p tcp -j REJECT --reject-with tcp-reset
+-A filtered -j DROP
+COMMIT
