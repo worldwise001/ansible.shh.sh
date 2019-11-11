@@ -15,7 +15,6 @@
         - nmap
         - nginx
         - certbot
-        - exim
         - cronie
         - syslog-ng
         - docker
@@ -23,3 +22,5 @@
         - base-devel
         - netctl
         - openvpn
+        - iptables
+        - sshguard
