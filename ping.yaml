@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: "{{ hosts_keyword }}"
   tasks:
     - name: test connection
       ping:
