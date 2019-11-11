@@ -1,0 +1,6 @@
+- hosts: "{{ hosts_keyword }}"
+  tasks:
+    - name: upgrade everything
+      pacman:
+         update_cache: yes
+         upgrade: yes
