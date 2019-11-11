@@ -1,0 +1,25 @@
+- hosts: "{{ hosts_keyword }}"
+  tasks:
+    - name: required packages
+      pacman:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - screen
+        - vim
+        - openssh
+        - wget
+        - git
+        - htop
+        - net-tools
+        - nmap
+        - nginx
+        - certbot
+        - exim
+        - cronie
+        - syslog-ng
+        - docker
+        - prometheus-node-exporter
+        - base-devel
+        - netctl
+        - openvpn
