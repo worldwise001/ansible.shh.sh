@@ -1,0 +1,7 @@
+- hosts: "{{ hosts_keyword }}"
+  tasks:
+    - name: upgrade packages
+      pacman:
+         update_cache: yes
+         upgrade: yes
+         upgrade_extra_args: --ignore pacman,glibc,linux-lts,linux-lts-headers,linux,linux-headers,systemd,systemd-sysvcompat,libsystemd
