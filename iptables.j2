@@ -6,17 +6,19 @@
 :filtered - [0:0]
 :local - [0:0]
 :open - [0:0]
-:shh - [0:0]
-:home - [0:0]
+:family - [0:0]
 :sshguard - [0:0]
 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 -A INPUT -s 127.0.0.1/32 -j local
+{% for ip in ips %}
+   "-A INPUT -s {{ ip }}/32 -j family"
+{% endfor %}
 -A local -j ACCEPT
 -A open -j ACCEPT
--A shh -j ACCEPT
--A home -j ACCEPT
--A INPUT -p tcp -m tcp --dport 80 -j open
--A INPUT -p tcp -m tcp --dport 443 -j open
+-A family -j ACCEPT
+{% for port in ports %}
+   "-A INPUT -p tcp -m tcp --dport {{ port }} -j open"
+{% endfor %}
 -A INPUT -p tcp -m tcp --dport 22 -j sshguard
 -A INPUT -p tcp -m tcp --dport 22 -j open
 -A INPUT -p tcp -m tcp -j closed
