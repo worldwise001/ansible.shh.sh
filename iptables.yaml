@@ -6,7 +6,7 @@
         ports: []
     - name: resolve ips
       set_fact: ips="{{ ips + [ lookup('dig', item + '.') ] }}"
-      loop: "{{ machines }}"
+      loop: "{{ ansible_play_hosts_all }}"
     - name: add http ports
       set_fact: ports="{{ ports + [ '80', '443' ] }}"
       when: "'web' in group_names"
