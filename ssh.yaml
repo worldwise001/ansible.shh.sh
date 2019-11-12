@@ -1,5 +1,11 @@
 - hosts: "{{ hosts_keyword }}"
   tasks:
+    - name: required packages
+      pacman:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - openssh
     - name: chattr -i /etc/ssh/sshd_config
       file:
         path: /etc/ssh/sshd_config
