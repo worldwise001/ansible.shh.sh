@@ -24,3 +24,19 @@
         - openvpn
         - iptables
         - sshguard
+    - name: all but mail packages
+      pacman:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - exim
+      when: "'mail' not in group_names"
+    - name: mail packages
+      pacman:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - dovecot
+        - roundcube
+        - mailman
+      when: "'mail' in group_names"
