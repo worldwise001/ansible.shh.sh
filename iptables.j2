@@ -11,13 +11,13 @@
 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 -A INPUT -s 127.0.0.1/32 -j local
 {% for ip in ips %}
-   "-A INPUT -s {{ ip }}/32 -j family"
+-A INPUT -s {{ ip }}/32 -j family
 {% endfor %}
 -A local -j ACCEPT
 -A open -j ACCEPT
 -A family -j ACCEPT
 {% for port in ports %}
-   "-A INPUT -p tcp -m tcp --dport {{ port }} -j open"
+-A INPUT -p tcp -m tcp --dport {{ port }} -j open
 {% endfor %}
 -A INPUT -p tcp -m tcp --dport 22 -j sshguard
 -A INPUT -p tcp -m tcp --dport 22 -j open
