@@ -1,0 +1,24 @@
+Port 22
+AddressFamily any
+ListenAddress 0.0.0.0
+ListenAddress ::
+
+PermitRootLogin {{ rootlogin }}
+PubkeyAuthentication yes
+AuthorizedKeysFile	.ssh/authorized_keys
+#HostbasedAuthentication yes
+#IgnoreUserKnownHosts yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+UsePAM yes
+AllowAgentForwarding yes
+AllowTcpForwarding yes
+PrintMotd no # pam does that
+UseDNS no
+Banner /etc/motd
+
+Subsystem	sftp	/usr/lib/ssh/sftp-server
+AllowUsers {{ users }}
+Match Group users
+    AllowUsers *
