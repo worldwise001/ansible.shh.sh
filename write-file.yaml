@@ -1,5 +1,9 @@
 - hosts: "{{ hosts_keyword }}"
   tasks:
+  - name: chattr -i
+    file:
+      path: "{{ dest }}"
+      attributes: -i
   - name: Write a file
     copy:
       content: "{{ content }}"
@@ -7,3 +11,7 @@
       owner: "{{ user }}"
       group: "{{ user }}"
       mode: '0644'
+  - name: chattr +i
+    file:
+      path: "{{ dest }}"
+      attributes: +i
