@@ -2,8 +2,8 @@
   tasks:
   - name: Write a file
     copy:
-      content: {{ content }}
-      dest: {{ dest }}
-      owner: {{ user }}
-      group: {{ user }}
+      content: "{{ content }}"
+      dest: "{{ dest }}"
+      owner: "{{ user }}"
+      group: "{{ user }}"
       mode: '0644'
