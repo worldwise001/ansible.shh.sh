@@ -16,4 +16,4 @@
     - name: create iptables.rules
       template:
         src: iptables.j2
-        dest: /root/iptables.rules
+        dest: /etc/iptables/iptables.rules
