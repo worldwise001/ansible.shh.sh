@@ -4,4 +4,4 @@
       set_fact: ips="[]"
     - name: resolve ips
       set_fact: ips="{{ips}} + [{{ lookup('dig', item + '.')}}]"
-      loop: "{{ hosts }}"
+      loop: "{{ machines }}"
