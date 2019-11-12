@@ -13,6 +13,13 @@
     - name: add mail ports
       set_fact: ports="{{ ports + [ '25', '465', '587', '143', '993' ] }}"
       when: "'mail' in group_names"
+    - name: required packages
+      pacman:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - iptables
+        - sshguard
     - name: chattr -i /etc/iptables/iptables.rules
       file:
         path: /etc/iptables/iptables.rules
