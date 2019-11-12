@@ -1,5 +1,9 @@
 - hosts: "{{ hosts_keyword }}"
   tasks:
+    - name: chattr -i /etc/ssh/sshd_config
+      file:
+        path: /etc/ssh/sshd_config
+        attributes: -i
     - name: sshd_config
       template:
         src: sshd_config.j2
@@ -9,3 +13,7 @@
         state: restarted
         enabled: yes
         name: sshd
+    - name: chattr +i /etc/ssh/sshd_config
+      file:
+        path: /etc/ssh/sshd_config
+        attributes: +i
