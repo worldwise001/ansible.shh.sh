@@ -9,10 +9,10 @@
       loop: "{{ machines }}"
     - name: add http ports
       set_fact: ports="{{ ports + ['80', '443'] }}"
-      when: "web" in group_names
+      when: web in group_names
     - name: add mail ports
       set_fact: ports="{{ ports + ['25', '465', '587', '143', '993'] }}"
-      when: "mail" in group_names
+      when: mail in group_names
     - name: create iptables.rules
       template:
         src: iptables.j2
