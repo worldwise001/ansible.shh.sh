@@ -7,5 +7,5 @@
       loop: "{{ machines }}"
     - name: create iptables.rules
       template:
-        src: /iptables.j2
+        src: iptables.j2
         dest: /root/iptables.rules
