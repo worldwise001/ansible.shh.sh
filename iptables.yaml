@@ -1,5 +1,15 @@
 - hosts: "{{ hosts_keyword }}"
   tasks:
+    - name: set fact if docker
+      set_fact:
+        more_filter: "{{ lookup('file', '/etc/iptables/docker.filter.j2') }}"
+        more_non_filter: "{{ lookup('file', '/etc/iptables/docker.nat.j2') }}"
+      when: "'docker' in group_names"
+    - name: set fact if not docker
+      set_fact:
+        more_filter: ""
+        more_non_filter: ""
+      when: "'docker' not in group_names"
     - name: init array
       set_fact:
         ips: []
@@ -28,6 +38,10 @@
       template:
         src: iptables.j2
         dest: /etc/iptables/iptables.rules
+    - name: chattr +i /etc/iptables/iptables.rules
+      file:
+        path: /etc/iptables/iptables.rules
+        attributes: +i
     - name: enable/restart iptables
       systemd:
         state: restarted
@@ -38,7 +52,3 @@
         state: restarted
         enabled: yes
         name: sshguard
-    - name: chattr +i /etc/iptables/iptables.rules
-      file:
-        path: /etc/iptables/iptables.rules
-        attributes: +i
