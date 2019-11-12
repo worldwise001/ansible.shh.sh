@@ -3,7 +3,7 @@
     - name: init array
       set_fact: ips="[]"
     - name: resolve ips
-      set_fact: ips="{{ips}} + [{{ lookup('dig', item + '.')}}]"
+      set_fact: ips="{{ips + [lookup('dig', item + '.')]}}"
       loop: "{{ machines }}"
     - name: create iptables.rules
       template:
