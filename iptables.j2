@@ -25,4 +25,5 @@
 -A INPUT -p udp -j filtered
 -A closed -p tcp -j REJECT --reject-with tcp-reset
 -A filtered -j DROP
+{{ more_filter }}
 COMMIT
