@@ -37,6 +37,12 @@
         state: latest
       loop:
         - dovecot
-        - roundcube
         - mailman
       when: "'mail' in group_names"
+    - name: ldap packages
+      pacman:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - slapd
+      when: "'ldap' in group_names"
