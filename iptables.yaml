@@ -26,6 +26,11 @@
         state: restarted
         enabled: yes
         name: iptables
+    - name: enable/restart sshguard
+      systemd:
+        state: restarted
+        enabled: yes
+        name: sshguard
     - name: chattr +i /etc/iptables/iptables.rules
       file:
         path: /etc/iptables/iptables.rules
