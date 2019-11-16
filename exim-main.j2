@@ -60,7 +60,7 @@ spf_test:
           add_header = Received-SPF: none ({{ domain }}: {{ '${sender_address} does not designate permitted sender hosts) client-ip=${sender_host_address};' }}
 
   # SPF +all is meaningless
-  accept  condition = {{ '${if match {$acl_m_spf_record}{\\+all}}' }}
+  accept  condition = {{ '${if match {$acl_m_spf_record}{\\\\+all}}' }}
           add_header = Received-SPF: none ({{ domain }}: {{ '${sender_address} does not designate permitted sender hosts) client-ip=${sender_host_address};' }}
 
   accept  spf = pass
