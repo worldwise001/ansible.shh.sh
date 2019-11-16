@@ -1,4 +1,4 @@
-- hosts: "{{ hosts_keyword }}"
+- hosts: all
   tasks:
     - name: cat if docker
       shell: "cat /etc/iptables/docker.filter.j2 || true"
