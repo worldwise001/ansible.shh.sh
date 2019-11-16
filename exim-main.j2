@@ -5,12 +5,15 @@
 primary_hostname = {{ inventory_hostname }}
 
 domainlist main_domains = {{ domain }} : *.{{ domain }} : *.local.{{ domain }}
-domainlist fw_domains = *@{{ alt_domain }} : *@*.{{ alt_domain }} {% for d in fw_domains %}: d {% endfor %}
+domainlist fw_domains = *@{{ alt_domain }} : *@*.{{ alt_domain }} {% for d in fw_domains %}: {{ d }} {% endfor %}
+
 domainlist list_domains = lists.{{ domain }}
 domainlist local_domains = @ : +main_domains : +fw_domains : +list_domains
-domainlist dead_domains = <{% for d in dead_domains %}; d {% endfor %}
+domainlist dead_domains = <{% for d in dead_domains %}; {{ d }} {% endfor %}
+
 domainlist relay_to_domains =
-hostlist   relay_from_hosts = <; localhost {% for ip in ips %}; ip {% endfor %}
+hostlist   relay_from_hosts = <; localhost {% for ip in ips %}; {{ ip }} {% endfor %}
+
 
 acl_smtp_rcpt = acl_check_rcpt
 acl_smtp_data = acl_check_data
