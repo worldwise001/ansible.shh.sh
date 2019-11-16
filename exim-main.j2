@@ -217,7 +217,7 @@ mailman:
   group = mailman
   home_directory = /usr/lib/mailman
   current_directory = /usr/lib/mailman
-  command = /usr/lib/mailman/mail/mailman {{ '"${if def:local_part_suffix {${sg{$local_part_suffix}{-(\\w+)(\\+.*)?}{\$1}}}{post}}"' }} $local_part
+  command = /usr/lib/mailman/mail/mailman {{ "'${if def:local_part_suffix {${sg{$local_part_suffix}{-(\\w+)(\\+.*)?}{\$1}}}{post}}'" }} $local_part
 
 remote_smtp:
   driver = smtp
