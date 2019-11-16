@@ -11,8 +11,9 @@
         state: stopped
         name: nginx
     - name: create certificate
-      command: "certbot certonly --standalone -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %}"
-      creates: /etc/letsencrypt
+      command:
+        cmd: "certbot certonly --standalone -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %}"
+        creates: /etc/letsencrypt
     - name: renew certificate
       command: "certbot renew --authenticator standalone --agree-tos"
     - name: ensure ssl group
