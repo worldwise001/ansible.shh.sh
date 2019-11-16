@@ -5,10 +5,10 @@
 primary_hostname = {{ inventory_hostname }}
 
 domainlist main_domains = {{ domain }} : *.{{ domain }} : *.local.{{ domain }}
-domainlist fw_domains = {{ fw_domains }} : *@{{ alt_domain }} : *@*.{{ alt_domain }}
+domainlist fw_domains = *@{{ alt_domain }} : *@*.{{ alt_domain }} {% for d in fw_domains %}: d {% endfor %}
 domainlist list_domains = lists.{{ domain }}
 domainlist local_domains = @ : +main_domains : +fw_domains : +list_domains
-domainlist dead_domains = {{ dead_domains }}
+domainlist dead_domains = <{% for d in dead_domains %}; d {% endfor %}
 domainlist relay_to_domains =
 hostlist   relay_from_hosts = <; localhost {% for ip in ips %}; ip {% endfor %}
 
