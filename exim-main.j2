@@ -46,27 +46,27 @@ timeout_frozen_after = 7d
 begin acl
 
 spf_test:
-  warn    set acl_m_spf_record = ${lookup dnsdb{txt=$sender_address_domain}{$value}}
+  warn    set acl_m_spf_record = {{ '${lookup dnsdb{txt=$sender_address_domain}{$value}}' }}
 
   # From local machines
   accept  hosts = +relay_from_hosts
-          add_header = Received-SPF: pass ({{ domain }}: message originates from trusted relay) client-ip=${sender_host_address};
+          add_header = Received-SPF: pass ({{ domain }}: {{ 'message originates from trusted relay) client-ip=${sender_host_address};' }}
 
   # No SPF record
-  accept  !condition = ${if def:acl_m_spf_record}
-          add_header = Received-SPF: none ({{ domain }}: ${sender_address} does not designate permitted sender hosts) client-ip=${sender_host_address};
+  accept  !condition = {{ '${if def:acl_m_spf_record}' }}
+          add_header = Received-SPF: none ({{ domain }}: {{ '${sender_address} does not designate permitted sender hosts) client-ip=${sender_host_address};' }}
 
   # SPF +all is meaningless
-  accept  condition = ${if match {$acl_m_spf_record}{\\+all}}
-          add_header = Received-SPF: none ({{ domain }}: ${sender_address} does not designate permitted sender hosts) client-ip=${sender_host_address};
+  accept  condition = {{ '${if match {$acl_m_spf_record}{\\+all}}' }}
+          add_header = Received-SPF: none ({{ domain }}: {{ '${sender_address} does not designate permitted sender hosts) client-ip=${sender_host_address};' }}
 
   accept  spf = pass
           set acl_m_spf_pass = $acl_m_spf_record
-          add_header = Received-SPF: pass ({{ domain }}: domain of ${sender_address} designates ${sender_host_address} as permitted sender) client-ip=${sender_host_address};
+          add_header = Received-SPF: pass ({{ domain }}: {{ 'domain of ${sender_address} designates ${sender_host_address} as permitted sender) client-ip=${sender_host_address};' }}
 
   accept  spf = fail
           set acl_m_spf_fail = $acl_m_spf_record
-          add_header = Received-SPF: softfail ({{ domain }}: domain of ${sender_address} does not designate ${sender_host_address} as permitted sender) client-ip=${sender_host_address};
+          add_header = Received-SPF: softfail ({{ domain }}: {{ 'domain of ${sender_address} does not designate ${sender_host_address} as permitted sender) client-ip=${sender_host_address};' }}
 
   accept
 
@@ -110,7 +110,7 @@ acl_check_data:
   warn    spam       = nobody:true
           add_header = X-Spam-Score: $spam_score ($spam_bar)\n\
                        X-Spam-Report: $spam_report\n\
-                       X-Spam-Status: ${if >{$spam_score_int}{50} {1}{0}}
+                       X-Spam-Status: {{ '${if >{$spam_score_int}{50} {1}{0}}' }}
 
   accept acl = spf_test
          condition = ${if def:acl_m_spf_pass}
@@ -136,13 +136,13 @@ dnslookup:
 listserv_scan:
   driver = redirect
   domains = +list_domains
-  condition = ${if and{ {>{$spam_score_int}{50}} {!eq{$local_part}{'spam'}} }{1}{0}}
+  condition = {{ '${if and{ {>{$spam_score_int}{50}} {!eq{$local_part}{'spam'}} }{1}{0}}' }}
   data = spam@lists.{{ domain }}
 
 listserv:
   driver = accept
   domains = +list_domains
-  require_files = /var/lib/mailman/lists/${lc::$local_part}/config.pck
+  require_files = {{ '/var/lib/mailman/lists/${lc::$local_part}/config.pck' }}
   local_part_suffix = -admin : -bounces : -bounces+* : -confirm : -confirm+* : -join : -leave : -owner : -request : -subscribe : -unsubscribe
   local_part_suffix_optional
   transport = mailman
@@ -166,7 +166,7 @@ system_aliases:
   allow_defer
   local_part_suffix = +* : -*
   local_part_suffix_optional
-  data = ${lookup{$local_part}lsearch{/etc/mail/aliases}}
+  data = {{ '${lookup{$local_part}lsearch{/etc/mail/aliases}}' }}
   file_transport = address_file
   pipe_transport = address_pipe
 
@@ -192,7 +192,7 @@ localuser:
 
 catchall_scan:
   driver = redirect
-  condition = ${if >{$spam_score_int}{50}{1}{0}}
+  condition = {{ '${if >{$spam_score_int}{50}{1}{0}}' }}
   data = spam@lists.{{ domain }}
 
 catchall:
@@ -214,11 +214,11 @@ mailman:
   group = mailman
   home_directory = /usr/lib/mailman
   current_directory = /usr/lib/mailman
-  command = /usr/lib/mailman/mail/mailman '${if def:local_part_suffix {${sg{$local_part_suffix}{-(\\w+)(\\+.*)?}{\$1}}}{post}}' $local_part
+  command = /usr/lib/mailman/mail/mailman {{ '\'${if def:local_part_suffix {${sg{$local_part_suffix}{-(\\w+)(\\+.*)?}{\$1}}}{post}}\'' }} $local_part
 
 remote_smtp:
   driver = smtp
-  dkim_domain = ${lc:${domain:$h_from:}} 
+  dkim_domain = {{ '${lc:${domain:$h_from:}}' }}
   dkim_selector = 20160724
   dkim_private_key = /etc/mail/dkim/dkim.{{ domain }}
   dkim_canon = relaxed 
@@ -226,8 +226,8 @@ remote_smtp:
 remote_smtp_rewrite:
   driver = smtp
   headers_rewrite = *@*.{{ alt_domain }} $1@{{ domain }} : *@*.{{ domain }} $1@{{ domain }}
-  return_path = ${sender_address_local_part}@{{ domain }}
-  dkim_domain = ${lc:${domain:$h_from:}} 
+  return_path = {{ '${sender_address_local_part}@{{ domain }}' }}
+  dkim_domain = {{ '${lc:${domain:$h_from:}}' }}
   dkim_selector = 20160724
   dkim_private_key = /etc/mail/dkim/dkim.{{ domain }}
   dkim_canon = relaxed 
@@ -239,7 +239,7 @@ local_delivery:
   envelope_to_add
   return_path_add
   create_directory = true
-  directory = /home/${local_part}/.mail
+  directory = {{ '/home/${local_part}/.mail' }}
   maildir_format
 
 procmail:
@@ -297,12 +297,12 @@ PLAIN:
   public_name                = PLAIN
   server_set_id              = $auth2
   server_prompts = :
-  server_condition = "${if pam{$auth2:$auth3}{yes}{no}}"
-  server_advertise_condition = ${if def:tls_in_cipher }
+  server_condition = {{ '"${if pam{$auth2:$auth3}{yes}{no}}"' }}
+  server_advertise_condition = {{ '${if def:tls_in_cipher }' }}
 
 LOGIN:
   driver                     = plaintext
   server_set_id              = $auth1
   server_prompts             = "Username:: : Password::"
-  server_condition = "${if pam{$auth1:$auth2}{yes}{no}}"
-  server_advertise_condition = ${if def:tls_in_cipher }
+  server_condition = {{ '"${if pam{$auth1:$auth2}{yes}{no}}"' }}
+  server_advertise_condition = {{ '${if def:tls_in_cipher }' }}
