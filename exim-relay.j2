@@ -12,13 +12,13 @@ acl_smtp_rcpt = acl_check_rcpt
 acl_smtp_data = acl_check_data
 
 tls_advertise_hosts = *
-tls_certificate = /etc/letsencrypt/live/{{ domain }}/fullchain.pem
-tls_privatekey = /etc/letsencrypt/live/{{ domain }}/privkey.pem
+tls_certificate = /etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem
+tls_privatekey = /etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem
 
 daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465
 
-qualify_domain = {{ domain }}
+qualify_domain = {{ inventory_hostname }}
 never_users = root
 
 host_lookup = *
