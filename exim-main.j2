@@ -229,7 +229,7 @@ remote_smtp:
 remote_smtp_rewrite:
   driver = smtp
   headers_rewrite = *@*.{{ alt_domain }} $1@{{ domain }} : *@*.{{ domain }} $1@{{ domain }}
-  return_path = {{ '${sender_address_local_part}@{{ domain }}' }}
+  return_path = {{ '${sender_address_local_part}' }}@{{ domain }}
   dkim_domain = {{ '${lc:${domain:$h_from:}}' }}
   dkim_selector = 20160724
   dkim_private_key = /etc/mail/dkim/dkim.{{ domain }}
