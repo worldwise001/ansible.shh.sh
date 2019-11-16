@@ -44,6 +44,11 @@
       file:
         path: /etc/letsencrypt/archive
         mode: g+x
+    - name: chmod 
+      file:
+        path: /etc/letsencrypt/archive
+        mode: g+r
+        recurse: yes
     - name: restart nginx
       systemd:
         state: restarted
