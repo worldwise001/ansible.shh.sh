@@ -23,6 +23,20 @@
           - exim
         state: latest
       when: "'mail' not in group_names"
+    - name: exim is in ssl group
+      user:
+        name: exim
+        groups: ssl
+    - name: dovecot is in ssl group
+      user:
+        name: dovecot
+        groups: ssl
+      when: "'mail' in group_names"
+    - name: mailman is in ssl group
+      user:
+        name: mailman
+        groups: ssl
+      when: "'mail' in group_names"
     - name: chattr -i /etc/mail/exim.conf
       file:
         path: /etc/mail/exim.conf
