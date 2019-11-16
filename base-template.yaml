@@ -2,47 +2,44 @@
   tasks:
     - name: required packages
       pacman:
-        name: "{{ item }}"
+        name:
+          - screen
+          - vim
+          - openssh
+          - wget
+          - git
+          - htop
+          - net-tools
+          - nmap
+          - nginx
+          - certbot
+          - cronie
+          - syslog-ng
+          - docker
+          - prometheus-node-exporter
+          - base-devel
+          - netctl
+          - openvpn
+          - iptables
+          - sshguard
         state: latest
-      loop:
-        - screen
-        - vim
-        - openssh
-        - wget
-        - git
-        - htop
-        - net-tools
-        - nmap
-        - nginx
-        - certbot
-        - cronie
-        - syslog-ng
-        - docker
-        - prometheus-node-exporter
-        - base-devel
-        - netctl
-        - openvpn
-        - iptables
-        - sshguard
     - name: all but mail packages
       pacman:
-        name: "{{ item }}"
+        name:
+          - exim
         state: latest
-      loop:
-        - exim
       when: "'mail' not in group_names"
     - name: mail packages
       pacman:
-        name: "{{ item }}"
+        name:
+          - dovecot
+          - mailman
         state: latest
-      loop:
-        - dovecot
-        - mailman
       when: "'mail' in group_names"
     - name: ldap packages
       pacman:
-        name: "{{ item }}"
+        name:
+          - slapd
         state: latest
       loop:
-        - slapd
       when: "'ldap' in group_names"
