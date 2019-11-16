@@ -33,3 +33,5 @@
         src: exim-relay.j2
         dest: /root/exim.conf
       when: "'mail' not in group_names"
+    - name: check config
+      command: exim -C /root/exim.conf -bV
