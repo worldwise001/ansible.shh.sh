@@ -1,0 +1,35 @@
+- hosts: "{{ hosts_keyword }}"
+  tasks:
+    - name: init array
+      set_fact:
+        ips: []
+        ports: []
+    - name: resolve ipv4
+      set_fact: ips="{{ ips + [ lookup('dig', item + '.', 'qtype=A') ] }}"
+      loop: "{{ ansible_play_hosts_all }}"
+    - name: resolve ipv6
+      set_fact: ips="{{ ips + [ lookup('dig', item + '.', 'qtype=AAAA') ] }}"
+      loop: "{{ ansible_play_hosts_all }}"
+    - name: required packages on mailserver
+      pacman:
+        name:
+          - dovecot
+          - mailman
+        state: latest
+      when: "'mail' in group_names"
+    - name: required packages on relays
+      pacman:
+        name:
+          - exim
+        state: latest
+      when: "'mail' not in group_names"
+    - name: create exim.conf on mailserver
+      template:
+        src: exim-main.j2
+        dest: /root/exim.conf
+      when: "'mail' in group_names"
+    - name: create exim.conf on relays
+      template:
+        src: exim-relay.j2
+        dest: /root/exim.conf
+      when: "'mail' not in group_names"
