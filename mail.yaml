@@ -32,11 +32,6 @@
         name: dovecot
         groups: ssl
       when: "'mail' in group_names"
-    - name: mailman is in ssl group
-      user:
-        name: mailman
-        groups: ssl
-      when: "'mail' in group_names"
     - name: chattr -i /etc/mail/exim.conf
       file:
         path: /etc/mail/exim.conf
@@ -57,8 +52,14 @@
       file:
         path: /etc/mail/exim.conf
         attributes: +i
-    - name: enable/restart iptables
+    - name: enable/restart exim
       systemd:
         state: restarted
         enabled: yes
         name: exim
+    - name: enable/restart dovecot
+      systemd:
+        state: restarted
+        enabled: yes
+        name: dovecot
+      when: "'mail' in group_names"
