@@ -5,7 +5,7 @@
 primary_hostname = {{ inventory_hostname }}
 
 domainlist local_domains = @
-domainlist relay_to_domains = mail.{{domain}}
+domainlist relay_to_domains = mail.{{ domain }}
 hostlist   relay_from_hosts = localhost
 
 acl_smtp_rcpt = acl_check_rcpt
@@ -102,7 +102,7 @@ system_aliases:
   driver = redirect
   allow_fail
   allow_defer
-  data = ${lookup{$local_part}lsearch{/etc/mail/aliases}}
+  data = {{ '${lookup{$local_part}lsearch{/etc/mail/aliases}}' }}
   file_transport = address_file
   pipe_transport = address_pipe
 
