@@ -1,4 +1,4 @@
-- hosts: "{{ hosts_keyword }}"
+- hosts: all
   tasks:
     - name: upgrade everything
       pacman:
