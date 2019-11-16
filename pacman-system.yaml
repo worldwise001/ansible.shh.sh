@@ -1,0 +1,15 @@
+- hosts: "{{ hosts_keyword }}"
+  tasks:
+    - name: upgrade system packages
+      pacman:
+        state: latest
+        name:
+          - pacman
+          - glibc
+          - linux-lts
+          - linux-lts-headers
+          - linux
+          - linux-headers
+          - systemd
+          - systemd-sysvcompat
+          - libsystemd
