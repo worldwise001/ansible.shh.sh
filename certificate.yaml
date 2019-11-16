@@ -35,6 +35,7 @@
       file:
         path: /etc/letsencrypt/
         mode: o-rwx
+        recurse: yes
     - name: chmod 
       file:
         path: /etc/letsencrypt/live
