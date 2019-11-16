@@ -13,3 +13,9 @@
           - systemd
           - systemd-sysvcompat
           - libsystemd
+    - name: Reboot to get new kernel
+      reboot:
+        reboot_timeout: 3600
+        connect_timeout: 30
+      when: "'ansible' not in group_names"
+      
