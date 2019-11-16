@@ -23,15 +23,28 @@
           - exim
         state: latest
       when: "'mail' not in group_names"
+    - name: chattr -i /etc/mail/exim.conf
+      file:
+        path: /etc/mail/exim.conf
+        attributes: -i
     - name: create exim.conf on mailserver
       template:
         src: exim-main.j2
-        dest: /root/exim.conf
+        dest: /etc/mail/exim.conf
       when: "'mail' in group_names"
     - name: create exim.conf on relays
       template:
         src: exim-relay.j2
-        dest: /root/exim.conf
+        dest: /etc/mail/exim.conf
       when: "'mail' not in group_names"
     - name: check config
       command: exim -C /root/exim.conf -bV
+    - name: chattr +i /etc/mail/exim.conf
+      file:
+        path: /etc/mail/exim.conf
+        attributes: +i
+    - name: enable/restart iptables
+      systemd:
+        state: restarted
+        enabled: yes
+        name: exim
