@@ -20,27 +20,27 @@
           - sshguard
         state: latest
     - name: dump iptables rules
-      command: "iptables-save > /etc/iptables/iptables.temp"
+      shell: "iptables-save > /etc/iptables/iptables.temp"
     - name: extract docker nat
-      command: "echo '*nat' > /etc/iptables/docker.nat.rules"
-      when: "'docker' in group_names"
-    - name: extract docker nat
-      command: "awk '/*nat/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/docker.nat.rules"
+      shell: "echo '*nat' > /etc/iptables/docker.nat.rules"
       when: "'docker' in group_names"
     - name: extract docker nat
-      command: "echo 'COMMIT' >> /etc/iptables/docker.nat.rules"
+      shell: "awk '/*nat/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/docker.nat.rules"
+      when: "'docker' in group_names"
+    - name: extract docker nat
+      shell: "echo 'COMMIT' >> /etc/iptables/docker.nat.rules"
       when: "'docker' in group_names"
     - name: extract docker forwarding
-      command: "echo '-A FORWARD -j DOCKER-USER' > /etc/iptables/docker.fw.rules"
+      shell: "echo '-A FORWARD -j DOCKER-USER' > /etc/iptables/docker.fw.rules"
       when: "'docker' in group_names"
     - name: extract docker forwarding
-      command: "awk '/-A FORWARD -j DOCKER-USER/{flag=1;next}/-A DOCKER-USER -j RETURN/{flag=0}flag' /etc/iptables/iptables.temp > /etc/iptables/docker.fw.rules"
+      shell: "awk '/-A FORWARD -j DOCKER-USER/{flag=1;next}/-A DOCKER-USER -j RETURN/{flag=0}flag' /etc/iptables/iptables.temp > /etc/iptables/docker.fw.rules"
       when: "'docker' in group_names"
     - name: extract docker forwarding
-      command: "echo '-A DOCKER-USER -j RETURN' > /etc/iptables/docker.fw.rules"
+      shell: "echo '-A DOCKER-USER -j RETURN' > /etc/iptables/docker.fw.rules"
       when: "'docker' in group_names"
     - name: extract sshguard blacklists
-      command: "awk '/-A open -j ACCEPT/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp > /etc/iptables/sshguard.rules"
+      shell: "awk '/-A open -j ACCEPT/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp > /etc/iptables/sshguard.rules"
     - name: cat ssh rules
       shell: "cat /etc/iptables/sshguard.rules || true"
       register: sshguard_filter
