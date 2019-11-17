@@ -1,21 +1,5 @@
 - hosts: all
   tasks:
-    - name: cat if docker
-      shell: "cat /etc/iptables/docker.filter.j2 || true"
-      register: cmd_filter
-    - name: cat if docker again
-      shell: "cat /etc/iptables/docker.nat.j2 || true"
-      register: cmd_nat
-    - name: set fact if docker
-      set_fact:
-        more_filter: "{{ cmd_filter.stdout }}"
-        more_non_filter: "{{ cmd_nat.stdout }}"
-      when: "'docker' in group_names"
-    - name: set fact if not docker
-      set_fact:
-        more_filter: ""
-        more_non_filter: ""
-      when: "'docker' not in group_names"
     - name: init array
       set_fact:
         ips: []
@@ -31,11 +15,19 @@
       when: "'mail' in group_names"
     - name: required packages
       pacman:
-        name: "{{ item }}"
+        name:
+          - iptables
+          - sshguard
         state: latest
-      loop:
-        - iptables
-        - sshguard
+    - name: stop docker
+      systemd:
+        state: stopped
+        name: docker
+      when: "'docker' in group_names"
+    - name: stop iptables
+      systemd:
+        state: stopped
+        name: iptables
     - name: chattr -i /etc/iptables/iptables.rules
       file:
         path: /etc/iptables/iptables.rules
@@ -58,3 +50,8 @@
         state: restarted
         enabled: yes
         name: sshguard
+    - name: start docker
+      systemd:
+        state: restarted
+        name: docker
+      when: "'docker' in group_names"
