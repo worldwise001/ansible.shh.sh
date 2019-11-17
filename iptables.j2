@@ -25,9 +25,9 @@
 -A INPUT -p udp -j filtered
 {{ docker_fw }}
 -A closed -p tcp -j REJECT --reject-with tcp-reset
+-A family -j ACCEPT
 -A filtered -j DROP
 -A local -j ACCEPT
 -A open -j ACCEPT
--A family -j ACCEPT
 {{ sshguard_blacklist }}
 COMMIT
