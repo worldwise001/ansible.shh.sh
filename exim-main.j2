@@ -5,7 +5,7 @@
 primary_hostname = {{ inventory_hostname }}
 
 domainlist main_domains = {{ domain }} : *.{{ domain }} : *.local.{{ domain }}
-domainlist fw_domains = *@{{ alt_domain }} : *@*.{{ alt_domain }} {% for d in fw_domains %}: {{ d }} {% endfor %}
+domainlist fw_domains = {{ alt_domain }} : *.{{ alt_domain }} {% for d in fw_domains %}: {{ d }} {% endfor %}
 
 domainlist list_domains = lists.{{ domain }}
 domainlist local_domains = @ : +main_domains : +fw_domains : +list_domains
