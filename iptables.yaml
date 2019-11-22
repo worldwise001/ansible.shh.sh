@@ -83,7 +83,8 @@
         enabled: yes
         name: sshguard
     - name: cleanup
-      file: "{{ item }}"
+      file:
+        path: "{{ item }}"
         state: absent
       loop:
         - /etc/iptables/iptables.temp
