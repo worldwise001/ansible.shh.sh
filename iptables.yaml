@@ -83,4 +83,10 @@
         enabled: yes
         name: sshguard
     - name: cleanup
-      command: "rm /etc/iptables/iptables.temp /etc/iptables/docker.nat.rules /etc/iptables/docker.fw.rules /etc/iptables/sshguard.rules"
+      file: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/iptables/iptables.temp
+        - /etc/iptables/docker.nat.rules
+        - /etc/iptables/docker.fw.rules
+        - /etc/iptables/sshguard.rules
