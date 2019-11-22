@@ -2,29 +2,29 @@
   tasks:
   - name: chattr -i
     file:
-      path: /root/hosts
+      path: /etc/hosts
       attributes: -i
   - name: clear out file
-    shell: "echo '' > /root/hosts"
+    shell: "echo '' > /etc/hosts"
   - name: localhost
     lineinfile:
-      path: /root/hosts
+      path: /etc/hosts
       line: 127.0.0.1 localhost.localdomain localhost
   - name: localhost
     lineinfile:
-      path: /root/hosts
+      path: /etc/hosts
       line: ::1 localhost.localdomain localhost
   - name: add ipv4
     lineinfile:
-      path: /root/hosts
+      path: /etc/hosts
       line: "{{ lookup('dig', item + '.') }} {{ item }} {{ item.split('.')[0] }}"
     loop: "{{ ansible_play_hosts_all }}"
   - name: add ipv6
     lineinfile:
-      path: /root/hosts
+      path: /etc/hosts
       line: "{{ lookup('dig', item + '.', 'qtype=AAAA') }} {{ item }} {{ item.split('.')[0] }}"
     loop: "{{ ansible_play_hosts_all }}"
   - name: chattr +i
     file:
-      path: /root/hosts
+      path: /etc/hosts
       attributes: +i
