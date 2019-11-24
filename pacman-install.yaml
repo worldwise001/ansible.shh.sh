@@ -23,6 +23,7 @@
           - iptables
           - sshguard
         state: latest
+        update_cache: yes
     - name: all but mail packages
       pacman:
         name:
@@ -41,5 +42,4 @@
         name:
           - slapd
         state: latest
-      loop:
       when: "'ldap' in group_names"
