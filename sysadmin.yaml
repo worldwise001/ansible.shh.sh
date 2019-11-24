@@ -8,3 +8,9 @@
         system: yes
         create_home: yes
         update_password: on_create
+    - name: add sysadmin .ssh
+      file:
+        name: /home/sysadmin/.ssh
+        state: directory
+        owner: sysadmin
+        group: sysadmin
