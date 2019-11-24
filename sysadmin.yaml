@@ -1,0 +1,10 @@
+- hosts: all
+  tasks:
+    - name: add sysadmin
+      user:
+        name: sysadmin
+        comment: sysadmin
+        uid: 500
+        system: yes
+        create_home: yes
+        update_password: on_create
