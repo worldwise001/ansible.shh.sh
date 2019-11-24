@@ -14,3 +14,9 @@
         state: directory
         owner: sysadmin
         group: sysadmin
+    - name: add sysadmin .ssh/authorized_keys
+      file:
+        name: /home/sysadmin/.ssh/authorized_keys
+        state: touch
+        owner: sysadmin
+        group: sysadmin
