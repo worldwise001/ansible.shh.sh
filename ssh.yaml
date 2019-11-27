@@ -21,3 +21,16 @@
       file:
         path: /etc/ssh/sshd_config
         attributes: +i
+    - name: chattr -i /etc/ssh/ssh_config
+      file:
+        path: /etc/ssh/ssh_config
+        attributes: -i
+    - name: ssh_config
+      template:
+        src: ssh_config.j2
+        dest: /etc/ssh/ssh_config
+    - name: chattr +i /etc/ssh/ssh_config
+      file:
+        path: /etc/ssh/ssh_config
+        attributes: +i
+
