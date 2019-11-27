@@ -22,6 +22,3 @@ Subsystem	sftp	/usr/lib/ssh/sftp-server
 AllowUsers {{ users }}
 Match Group users
     AllowUsers *
-Host *
-  SendEnv LANG LC_*
-  ForwardAgent yes
