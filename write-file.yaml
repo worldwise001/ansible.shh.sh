@@ -1,13 +1,10 @@
 - hosts: all
   tasks:
-  - name: present
-    file:
-      path: "{{ dest }}"
-      state: touch
   - name: chattr -i
     file:
       path: "{{ dest }}"
       attributes: -i
+      state: touch
   - name: Write a file
     copy:
       content: "{{ content }}"
