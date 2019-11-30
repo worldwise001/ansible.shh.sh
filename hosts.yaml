@@ -14,15 +14,15 @@
     lineinfile:
       path: /etc/hosts
       line: ::1 localhost.localdomain localhost
-  - name: add ipv4
-    lineinfile:
-      path: /etc/hosts
-      line: "{{ lookup('dig', item + '.') }} {{ item }} {{ item.split('.')[0] }}"
-    loop: "{{ ansible_play_hosts_all }}"
   - name: add ipv6
     lineinfile:
       path: /etc/hosts
       line: "{{ lookup('dig', item + '.', 'qtype=AAAA') }} {{ item }} {{ item.split('.')[0] }}"
+    loop: "{{ ansible_play_hosts_all }}"
+  - name: add ipv4
+    lineinfile:
+      path: /etc/hosts
+      line: "{{ lookup('dig', item + '.') }} {{ item }} {{ item.split('.')[0] }}"
     loop: "{{ ansible_play_hosts_all }}"
   - name: chattr +i
     file:
