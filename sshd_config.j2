@@ -6,8 +6,9 @@ ListenAddress ::
 PermitRootLogin {{ rootlogin }}
 PubkeyAuthentication yes
 AuthorizedKeysFile	.ssh/authorized_keys
-#HostbasedAuthentication yes
+HostbasedAuthentication no
 #IgnoreUserKnownHosts yes
+HostKeyAlgorithms ssh-ed25519-cert-v01@openssh.com
 PasswordAuthentication no
 PermitEmptyPasswords no
 ChallengeResponseAuthentication no
