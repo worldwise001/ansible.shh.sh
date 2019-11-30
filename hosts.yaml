@@ -25,7 +25,7 @@
       line: "{{ lookup('dig', item + '.') }} {{ item }} {{ item.split('.')[0] }}"
     loop: "{{ ansible_play_hosts_all }}"
   - name: cleanup /etc/hosts
-    shell: "sed -ni '/^ /!p' /etc/hosts"
+    shell: sed -ni '/^ /!p' /etc/hosts
   - name: chattr +i
     file:
       path: /etc/hosts
