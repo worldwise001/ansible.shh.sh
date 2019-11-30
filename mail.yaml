@@ -47,7 +47,7 @@
         dest: /etc/mail/exim.conf
       when: "'mail' not in group_names"
     - name: check config
-      command: exim -C /root/exim.conf -bV
+      command: exim -C /etc/mail/exim.conf -bV
     - name: chattr +i /etc/mail/exim.conf
       file:
         path: /etc/mail/exim.conf
