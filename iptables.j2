@@ -17,6 +17,7 @@
 -A INPUT -s 127.0.0.1/32 -j local
 -A INPUT -s 172.17.0.0/24 -j family
 -A INPUT -s 172.18.0.0/24 -j family
+{{ other_entry }}
 {% for ip in ips %}
 -A INPUT -s {{ ip }}/32 -j family
 {% endfor %}
