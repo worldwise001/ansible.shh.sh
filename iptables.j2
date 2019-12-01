@@ -14,7 +14,6 @@
 :family - [0:0]
 :sshguard - [0:0]
 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
--A INPUT -i veth+ -p udp -j ACCEPT
 -A INPUT -s 127.0.0.1/32 -j local
 -A INPUT -s 172.17.0.0/24 -j family
 -A INPUT -s 172.18.0.0/24 -j family
