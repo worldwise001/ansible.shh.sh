@@ -15,3 +15,11 @@
         src: bash.bashrc
         dest: /etc/bash.bashrc
         attributes: +i
+    - name: /etc/skel/.bashrc
+      file:
+        path: /etc/skel/.bashrc
+        state: absent
+    - name: /etc/skel/.screenrc
+      file:
+        path: /etc/skel/.screenrc
+        state: absent
