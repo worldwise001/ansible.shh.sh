@@ -14,9 +14,9 @@
         state: directory
         owner: sysadmin
         group: sysadmin
-    - name: chattr -i /sysadmin/.ssh/authorized_keys
+    - name: chattr -i /home/sysadmin/.ssh/authorized_keys
       file:
-        path: /sysadmin/.ssh/authorized_keys
+        path: /home/sysadmin/.ssh/authorized_keys
         attributes: -i
         state: touch
         owner: sysadmin
@@ -24,9 +24,9 @@
     - name: authorized_keys
       copy:
         content: "{{ authorized_keys }}"
-        dest: /sysadmin/.ssh/authorized_keys
+        dest: /home/sysadmin/.ssh/authorized_keys
         mode: '0600'
-    - name: chattr +i /sysadmin/.ssh/authorized_keys
+    - name: chattr +i /home/sysadmin/.ssh/authorized_keys
       file:
-        path: /sysadmin/.ssh/authorized_keys
+        path: /home/sysadmin/.ssh/authorized_keys
         attributes: +i
