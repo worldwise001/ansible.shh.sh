@@ -1,0 +1,17 @@
+- hosts: all
+  tasks:
+    - name: install syslog-ng
+      pacman:
+        name:
+          - syslog-ng
+        state: latest
+    - name: syslog-ng.conf
+      copy:
+        src: syslog-ng.conf
+        dest: /etc/syslog-ng/syslog-ng.conf
+        attributes: +i
+    - name: enable/restart syslog-ng
+      systemd:
+        state: restarted
+        enabled: yes
+        name: syslog-ng@default
