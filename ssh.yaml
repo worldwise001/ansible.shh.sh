@@ -8,23 +8,25 @@
       file:
         path: /etc/ssh/sshd_config
         attributes: -i
+        state: touch
     - name: sshd_config
       template:
         src: sshd_config.j2
         dest: /etc/ssh/sshd_config
+    - name: chattr +i /etc/ssh/sshd_config
+      file:
+        path: /etc/ssh/sshd_config
+        attributes: +i
     - name: enable/restart sshd
       systemd:
         state: restarted
         enabled: yes
         name: sshd
-    - name: chattr +i /etc/ssh/sshd_config
-      file:
-        path: /etc/ssh/sshd_config
-        attributes: +i
     - name: chattr -i /etc/ssh/ssh_config
       file:
         path: /etc/ssh/ssh_config
         attributes: -i
+        state: touch
     - name: ssh_config
       template:
         src: ssh_config.j2
@@ -32,5 +34,33 @@
     - name: chattr +i /etc/ssh/ssh_config
       file:
         path: /etc/ssh/ssh_config
+        attributes: +i
+    - name: chattr -i /etc/ssh/ssh_known_hosts
+      file:
+        path: /etc/ssh/ssh_known_hosts
+        attributes: -i
+        state: touch
+    - name: ssh_known_hosts
+      copy:
+        content: "{{ known_hosts }}"
+        dest: /etc/ssh/ssh_known_hosts
+        mode: '0644'
+    - name: chattr +i /etc/ssh/ssh_known_hosts
+      file:
+        path: /etc/ssh/ssh_known_hosts
+        attributes: +i
+    - name: chattr -i /root/.ssh/authorized_keys
+      file:
+        path: /root/.ssh/authorized_keys
+        attributes: -i
+        state: touch
+    - name: authorized_keys
+      copy:
+        content: "{{ authorized_keys }}"
+        dest: /root/.ssh/authorized_keys
+        mode: '0600'
+    - name: chattr +i /root/.ssh/authorized_keys
+      file:
+        path: /root/.ssh/authorized_keys
         attributes: +i
 
