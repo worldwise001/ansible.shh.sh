@@ -1,9 +1,13 @@
 #
-# ~/.bashrc
+# /etc/bash.bashrc
 #
 
 # If not running interactively, don't do anything
-#[[ $- != *i* ]] && return
+[[ $- != *i* ]] && return
+
+### AUTOCOMPLETION ###
+
+[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
 ### COLORS ###
 
@@ -26,6 +30,18 @@ export COLOR_GRAY='\e[1;30m'
 export COLOR_LIGHT_GRAY='\e[0;37m'
 
 ### TERMINAL PROMPT ###
+
+#PS1='[\u@\h \W]\$ '
+
+#case ${TERM} in
+#  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+#    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+#
+#    ;;
+#  screen*)
+#    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+#    ;;
+#esac
 
 export COLOR_USER=${COLOR_GREEN}
 if [ `id -u` -eq 0 ]; then
@@ -66,4 +82,4 @@ export HISTCONTROL=ignoredups
 ##############################
 
 # After each command, update LINES and COLUMNS to reflect the current window size
-shopt -s checkwinsize
+[[ $DISPLAY ]] && shopt -s checkwinsize
