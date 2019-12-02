@@ -1,0 +1,17 @@
+- hosts: all
+  tasks:
+    - name: vimrc
+      template:
+        src: vimrc.j2
+        dest: /etc/vimrc
+        attributes: +i
+    - name: screenrc
+      template:
+        src: screenrc.j2
+        dest: /etc/screenrc
+        attributes: +i
+    - name: bashrc
+      template:
+        src: bashrc.j2
+        dest: /etc/bash.bashrc
+        attributes: +i
