@@ -60,6 +60,11 @@
         docker_nat: "{{ cmd_nat.stdout }}"
         docker_fw: "{{ cmd_fw.stdout }}"
       when: "'docker' in group_names"
+    - name: chattr -i
+      file:
+        path: /etc/iptables/iptables.rules
+        attributes: -i
+        state: touch
     - name: create iptables.rules
       template:
         src: iptables.j2
