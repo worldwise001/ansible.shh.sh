@@ -6,6 +6,7 @@
       tls(
         key-file("/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem")
         cert-file("/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem")
+        ca-dir("/etc/ssl/certs")
       )
     );
 {{ '};' }}
