@@ -4,10 +4,10 @@
       "{{ destination_host }}"
       port(514)
       transport("tls")
-      key-file("/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem")
-      cert-file("/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem")
-      log_iw_size(10000)
-      log_fetch_limit(1000)
+      tls(
+        key-file("/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem")
+        cert-file("/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem")
+      )
     )
   );
 {{ '};' }}
