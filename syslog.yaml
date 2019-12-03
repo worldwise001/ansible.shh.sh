@@ -24,7 +24,6 @@
       copy:
         src: syslog-ng.conf
         dest: /etc/syslog-ng/syslog-ng.conf
-        attributes: +i
     - name: syslog-ng-recv.conf
       file:
         path: /etc/syslog-ng/syslog-ng-recv.conf
@@ -34,12 +33,10 @@
       template:
         src: syslog-ng-recv.conf.j2
         dest: /etc/syslog-ng/syslog-ng-recv.conf
-        attributes: +i
       when: "'monitoring' in group_names"
     - name: syslog-ng-recv.conf
       file:
         path: /etc/syslog-ng/syslog-ng-recv.conf
-        attributes: +i
         state: touch
       when: "'monitoring' not in group_names"
     - name: syslog-ng-send.conf
@@ -51,14 +48,24 @@
       template:
         src: syslog-ng-send.conf.j2
         dest: /etc/syslog-ng/syslog-ng-send.conf
-        attributes: +i
       when: "'monitoring' not in group_names"
     - name: syslog-ng-send.conf
       file:
         path: /etc/syslog-ng/syslog-ng-send.conf
-        attributes: +i
         state: touch
       when: "'monitoring' in group_names"
+    - name: syslog-ng.conf
+      file:
+        path: /etc/syslog-ng/syslog-ng.conf
+        attributes: +i
+    - name: syslog-ng-send.conf
+      file:
+        path: /etc/syslog-ng/syslog-ng-send.conf
+        attributes: +i
+    - name: syslog-ng-recv.conf
+      file:
+        path: /etc/syslog-ng/syslog-ng-recv.conf
+        attributes: +i
     - name: enable/restart syslog-ng
       systemd:
         state: restarted
