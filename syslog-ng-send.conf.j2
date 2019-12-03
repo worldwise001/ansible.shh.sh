@@ -1,7 +1,7 @@
 
 {{ 'destination d_network {' }}
     network(
-      {{ destination_host }}
+      "{{ destination_host }}"
       port(514)
       transport("tls")
       key-file("/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem")
