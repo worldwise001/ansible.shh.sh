@@ -1,0 +1,22 @@
+{{ 'source s_network {' }}
+  tcp(port(514)
+    tls(key_file("/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem")
+    cert_file("/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem")
+    ip("0.0.0.0")
+    log_iw_size(10000)
+    log_fetch_limit(1000)
+    peer_verify(yes))
+  );
+{{ '};' }}
+
+
+{{ 'destination d_elasticsearch_http {'}}
+  elasticsearch-http(
+    {{ 'index("syslog-${HOST}-${DAY}-${PROGRAM}")' }}
+    type("syslog")
+    url("http://localhost:9200/_bulk"),
+    workers(4));
+{{ '};' }}
+
+{{ 'log { source(src); filter(f_everything); destination(d_elasticsearch_http); };' }}
+{{ 'log { source(s_network); filter(f_everything); destination(d_elasticsearch_http); };' }}
