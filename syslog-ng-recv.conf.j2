@@ -16,7 +16,7 @@
   elasticsearch-http(
     {{ 'index("syslog-${HOST}-${DAY}-${PROGRAM}")' }}
     type("syslog")
-    url("http://localhost:9200/_bulk"),
+    url("http://localhost:9200/_bulk")
     workers(4));
 {{ '};' }}
 
