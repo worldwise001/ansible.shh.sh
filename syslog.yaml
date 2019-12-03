@@ -6,6 +6,21 @@
           - syslog-ng
         state: latest
     - name: syslog-ng.conf
+      file:
+        path: /etc/syslog-ng/syslog-ng.conf
+        attributes: -i
+        state: touch
+    - name: syslog-ng-send.conf
+      file:
+        path: /etc/syslog-ng/syslog-ng-send.conf
+        attributes: -i
+        state: touch
+    - name: syslog-ng-recv.conf
+      file:
+        path: /etc/syslog-ng/syslog-ng-recv.conf
+        attributes: -i
+        state: touch
+    - name: syslog-ng.conf
       copy:
         src: syslog-ng.conf
         dest: /etc/syslog-ng/syslog-ng.conf
