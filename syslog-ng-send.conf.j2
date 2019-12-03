@@ -8,8 +8,7 @@
         key-file("/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem")
         cert-file("/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem")
       )
-    )
-  );
+    );
 {{ '};' }}
 
 {{ 'log { source(src); filter(f_everything); destination(d_network); };' }}
