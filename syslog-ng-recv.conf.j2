@@ -1,11 +1,13 @@
 {{ 'source s_network {' }}
-  tcp(port(514)
-    tls(key_file("/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem")
-    cert_file("/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem")
-    ip("0.0.0.0")
-    log_iw_size(10000)
-    log_fetch_limit(1000)
-    peer_verify(yes))
+    network(
+      ip(0.0.0.0)
+      port(514)
+      transport("tls")
+      key-file("/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem")
+      cert-file("/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem")
+      log_iw_size(10000)
+      log_fetch_limit(1000)
+    )
   );
 {{ '};' }}
 
