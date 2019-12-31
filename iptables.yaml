@@ -85,7 +85,7 @@
         state: restarted
         enabled: yes
         name: docker
-      when: "'docker' in group_names"
+      when: "'docker' in group_names and 'ansible' not in group_names"
     - name: cleanup
       file:
         path: "{{ item }}"
