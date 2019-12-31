@@ -21,22 +21,22 @@
         state: latest
     - name: dump iptables rules
       shell: "iptables-save > /etc/iptables/iptables.temp"
-    - name: extract docker nat
+    - name: extract docker nat if ansible
       shell: "echo '*nat' > /etc/iptables/docker.nat.rules"
       when: "'ansible' in group_names"
-    - name: extract docker nat
+    - name: extract docker nat if ansible
       shell: "awk '/*nat/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/docker.nat.rules"
       when: "'ansible' in group_names"
-    - name: extract docker nat
+    - name: extract docker nat if ansible
       shell: "echo 'COMMIT' >> /etc/iptables/docker.nat.rules"
       when: "'ansible' in group_names"
-    - name: extract docker forwarding
+    - name: extract docker forwarding if ansible
       shell: "echo '-A FORWARD -j DOCKER-USER' > /etc/iptables/docker.fw.rules"
       when: "'ansible' in group_names"
-    - name: extract docker forwarding
+    - name: extract docker forwarding if ansible
       shell: "awk '/-A FORWARD -j DOCKER-USER/{flag=1;next}/-A DOCKER-USER -j RETURN/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/docker.fw.rules"
       when: "'ansible' in group_names"
-    - name: extract docker forwarding
+    - name: extract docker forwarding if ansible
       shell: "echo '-A DOCKER-USER -j RETURN' >> /etc/iptables/docker.fw.rules"
       when: "'ansible' in group_names"
     - name: extract sshguard blacklists
@@ -49,13 +49,15 @@
         docker_nat: ''
         docker_fw: ''
         sshguard_blacklist: "{{ sshguard_filter.stdout }}"
-    - name: cat if docker
+    - name: cat if ansible
       shell: "cat /etc/iptables/docker.nat.rules || true"
       register: cmd_nat
-    - name: cat if docker again
+      when: "'ansible' in group_names"
+    - name: cat if ansible again
       shell: "cat /etc/iptables/docker.fw.rules || true"
       register: cmd_fw
-    - name: set fact if docker
+      when: "'ansible' in group_names"
+    - name: set fact if ansible
       set_fact:
         docker_nat: "{{ cmd_nat.stdout }}"
         docker_fw: "{{ cmd_fw.stdout }}"
