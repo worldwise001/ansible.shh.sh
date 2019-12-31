@@ -76,9 +76,13 @@
       systemd:
         enabled: yes
         name: iptables
-    - name: restart iptables
+    - name: stop iptables
       systemd:
-        state: restarted
+        state: stopped
+        name: iptables
+    - name: start iptables
+      systemd:
+        state: started
         name: iptables
     - name: enable/restart sshguard
       systemd:
