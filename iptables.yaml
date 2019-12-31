@@ -23,22 +23,22 @@
       shell: "iptables-save > /etc/iptables/iptables.temp"
     - name: extract docker nat
       shell: "echo '*nat' > /etc/iptables/docker.nat.rules"
-      when: "'docker' in group_names"
+      when: "'ansible' in group_names"
     - name: extract docker nat
       shell: "awk '/*nat/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/docker.nat.rules"
-      when: "'docker' in group_names"
+      when: "'ansible' in group_names"
     - name: extract docker nat
       shell: "echo 'COMMIT' >> /etc/iptables/docker.nat.rules"
-      when: "'docker' in group_names"
+      when: "'ansible' in group_names"
     - name: extract docker forwarding
       shell: "echo '-A FORWARD -j DOCKER-USER' > /etc/iptables/docker.fw.rules"
-      when: "'docker' in group_names"
+      when: "'ansible' in group_names"
     - name: extract docker forwarding
       shell: "awk '/-A FORWARD -j DOCKER-USER/{flag=1;next}/-A DOCKER-USER -j RETURN/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/docker.fw.rules"
-      when: "'docker' in group_names"
+      when: "'ansible' in group_names"
     - name: extract docker forwarding
       shell: "echo '-A DOCKER-USER -j RETURN' >> /etc/iptables/docker.fw.rules"
-      when: "'docker' in group_names"
+      when: "'ansible' in group_names"
     - name: extract sshguard blacklists
       shell: "awk '/-A open -j ACCEPT/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp > /etc/iptables/sshguard.rules"
     - name: cat ssh rules
@@ -59,7 +59,7 @@
       set_fact:
         docker_nat: "{{ cmd_nat.stdout }}"
         docker_fw: "{{ cmd_fw.stdout }}"
-      when: "'docker' in group_names"
+      when: "'ansible' in group_names"
     - name: chattr -i
       file:
         path: /etc/iptables/iptables.rules
