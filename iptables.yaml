@@ -72,10 +72,13 @@
         src: iptables.j2
         dest: /etc/iptables/iptables.rules
         attributes: +i
-    - name: enable/restart iptables
+    - name: enable iptables
+      systemd:
+        enabled: yes
+        name: iptables
+    - name: restart iptables
       systemd:
         state: restarted
-        enabled: yes
         name: iptables
     - name: enable/restart sshguard
       systemd:
