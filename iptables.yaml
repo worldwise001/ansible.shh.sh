@@ -80,6 +80,12 @@
         state: restarted
         enabled: yes
         name: sshguard
+    - name: enable/restart docker
+      systemd:
+        state: restarted
+        enabled: yes
+        name: docker
+      when: "'docker' in group_names"
     - name: cleanup
       file:
         path: "{{ item }}"
