@@ -72,25 +72,11 @@
         src: iptables.j2
         dest: /etc/iptables/iptables.rules
         attributes: +i
-    - name: enable iptables
+    - name: enable/restart iptables
       systemd:
         enabled: yes
-        name: iptables
-    - name: stop iptables
-      systemd:
-        state: stopped
-        name: iptables
-      when: "'ansible' not in group_names"
-    - name: start iptables
-      systemd:
-        state: started
-        name: iptables
-      when: "'ansible' not in group_names"
-    - name: restart iptables
-      systemd:
         state: restarted
         name: iptables
-      when: "'ansible' in group_names"
     - name: enable/restart sshguard
       systemd:
         state: restarted
