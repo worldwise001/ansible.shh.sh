@@ -1,15 +1,11 @@
 - hosts: all
   tasks:
-    - name: clear and update cache
-      pacman:
-        state: latest
-        update_cache: yes
-        extra_args: -cc
-        name:
-          - pacman
+    - name: clear cache
+      shell: yes | pacman -Scc
     - name: upgrade system packages
       pacman:
         state: latest
+        update_cache: yes
         name:
           - pacman
           - glibc
