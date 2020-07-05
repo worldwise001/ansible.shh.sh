@@ -1,5 +1,12 @@
 - hosts: all
   tasks:
+    - name: clear and update cache
+      pacman:
+        state: latest
+        update_cache: yes
+        extra_args: -cc
+        name:
+          - pacman
     - name: upgrade system packages
       pacman:
         state: latest
