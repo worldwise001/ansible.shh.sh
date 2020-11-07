@@ -21,23 +21,31 @@
         state: latest
     - name: dump iptables rules
       shell: "iptables-save > /etc/iptables/iptables.temp"
-    - name: extract docker nat if ansible
-      shell: "echo '*nat' > /etc/iptables/docker.nat.rules"
+    - name: extract nat
+      shell: "echo '*nat' > /etc/iptables/nat.rules"
+      when: "'ansible' in group_names or 'nat' in group_names"
+    - name: extract ansible nat
+      shell: "awk '/*nat/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/nat.rules"
       when: "'ansible' in group_names"
-    - name: extract docker nat if ansible
-      shell: "awk '/*nat/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/docker.nat.rules"
-      when: "'ansible' in group_names"
-    - name: extract docker nat if ansible
-      shell: "echo 'COMMIT' >> /etc/iptables/docker.nat.rules"
+    - name: print extra nat
+      copy:
+        content: "{{ other_nat_entry }}"
+        dest: /etc/iptables/other.nat.rules
+      when: "'nat' in group_names"
+    - name: extract extra nat
+      shell: "cat /etc/iptables/other.nat.rules >> /etc/iptables/nat.rules"
+      when: "'nat' in group_names"
+    - name: extract nat
+      shell: "echo 'COMMIT' >> /etc/iptables/nat.rules"
+      when: "'ansible' in group_names or 'nat' in group_names"
+    - name: extract docker forwarding if ansible
+      shell: "echo '-A FORWARD -j DOCKER-USER' > /etc/iptables/fw.rules"
       when: "'ansible' in group_names"
     - name: extract docker forwarding if ansible
-      shell: "echo '-A FORWARD -j DOCKER-USER' > /etc/iptables/docker.fw.rules"
+      shell: "awk '/-A FORWARD -j DOCKER-USER/{flag=1;next}/-A DOCKER-USER -j RETURN/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/fw.rules"
       when: "'ansible' in group_names"
     - name: extract docker forwarding if ansible
-      shell: "awk '/-A FORWARD -j DOCKER-USER/{flag=1;next}/-A DOCKER-USER -j RETURN/{flag=0}flag' /etc/iptables/iptables.temp >> /etc/iptables/docker.fw.rules"
-      when: "'ansible' in group_names"
-    - name: extract docker forwarding if ansible
-      shell: "echo '-A DOCKER-USER -j RETURN' >> /etc/iptables/docker.fw.rules"
+      shell: "echo '-A DOCKER-USER -j RETURN' >> /etc/iptables/fw.rules"
       when: "'ansible' in group_names"
     - name: extract sshguard blacklists
       shell: "awk '/-A open -j ACCEPT/{flag=1;next}/COMMIT/{flag=0}flag' /etc/iptables/iptables.temp > /etc/iptables/sshguard.rules"
@@ -46,22 +54,25 @@
       register: sshguard_filter
     - name: init extras
       set_fact:
-        docker_nat: ''
-        docker_fw: ''
+        nat: ''
+        fw: ''
         sshguard_blacklist: "{{ sshguard_filter.stdout }}"
-    - name: cat if ansible
-      shell: "cat /etc/iptables/docker.nat.rules || true"
+    - name: cat if nat
+      shell: "cat /etc/iptables/nat.rules || true"
       register: cmd_nat
-      when: "'ansible' in group_names"
-    - name: cat if ansible again
-      shell: "cat /etc/iptables/docker.fw.rules || true"
+      when: "'ansible' in group_names or 'nat' in group_names"
+    - name: cat if fw
+      shell: "cat /etc/iptables/fw.rules || true"
       register: cmd_fw
       when: "'ansible' in group_names"
-    - name: set fact if ansible
+    - name: set fact if nat
       set_fact:
-        docker_nat: "{{ cmd_nat.stdout }}"
-        docker_fw: "{{ cmd_fw.stdout }}"
-      when: "'ansible' in group_names"
+        nat: "{{ cmd_nat.stdout }}"
+      when: "'nat' in group_names or 'ansible' in group_names"
+    - name: set fact if fw
+      set_fact:
+        fw: "{{ cmd_fw.stdout }}"
+      when: "'fw' in group_names or 'ansible' in group_names"
     - name: chattr -i
       file:
         path: /etc/iptables/iptables.rules
@@ -94,6 +105,6 @@
         state: absent
       loop:
         - /etc/iptables/iptables.temp
-        - /etc/iptables/docker.nat.rules
-        - /etc/iptables/docker.fw.rules
+        - /etc/iptables/nat.rules
+        - /etc/iptables/fw.rules
         - /etc/iptables/sshguard.rules
