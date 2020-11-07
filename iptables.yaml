@@ -35,6 +35,9 @@
     - name: extract extra nat
       shell: "cat /etc/iptables/other.nat.rules >> /etc/iptables/nat.rules"
       when: "'nat' in group_names"
+    - name: extract nat newline
+      shell: "echo -e '\n' >> /etc/iptables/nat.rules"
+      when: "'ansible' in group_names or 'nat' in group_names"
     - name: extract nat
       shell: "echo 'COMMIT' >> /etc/iptables/nat.rules"
       when: "'ansible' in group_names or 'nat' in group_names"
