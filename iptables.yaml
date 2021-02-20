@@ -86,6 +86,15 @@
         src: iptables.j2
         dest: /etc/iptables/iptables.rules
         attributes: +i
+    - name: cleanup
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/iptables/iptables.temp
+        - /etc/iptables/nat.rules
+        - /etc/iptables/fw.rules
+        - /etc/iptables/sshguard.rules
     - name: enable/restart iptables
       systemd:
         enabled: yes
@@ -102,12 +111,3 @@
         enabled: yes
         name: docker
       when: "'docker' in group_names and 'ansible' not in group_names"
-    - name: cleanup
-      file:
-        path: "{{ item }}"
-        state: absent
-      loop:
-        - /etc/iptables/iptables.temp
-        - /etc/iptables/nat.rules
-        - /etc/iptables/fw.rules
-        - /etc/iptables/sshguard.rules
