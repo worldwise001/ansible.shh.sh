@@ -100,6 +100,10 @@
         enabled: yes
         state: restarted
         name: iptables
+      register: iptables_restarted
+      until: iptables_restarted is not failed
+      retries: 5
+      delay: 2
     - name: enable/restart sshguard
       systemd:
         state: restarted
