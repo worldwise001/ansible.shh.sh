@@ -25,14 +25,17 @@
       loop: "{{ user_list }}"
     - name: add user .ssh
       file:
-        name: /home/"{{ item.username }}"/.ssh
+        name: "/home/{{ item.username }}/.ssh"
         state: directory
         owner: "{{ item.username }}"
+        group: users
       loop: "{{ user_list }}"
     - name: authorized_keys
       copy:
         content: "{{ item.authorized_keys }}"
-        dest: /home/"{{ item.username }}"/.ssh/authorized_keys
+        dest: "/home/{{ item.username }}/.ssh/authorized_keys"
+        owner: "{{ item.username }}"
+        group: users
         mode: '0600'
         force: no
       loop: "{{ user_list }}"
