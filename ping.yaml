@@ -2,3 +2,7 @@
   tasks:
     - name: test connection
       ping:
+    - name: print all hosts
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ groups['all'] }}"
