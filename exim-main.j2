@@ -297,16 +297,8 @@ begin rewrite
 begin authenticators
 
 PLAIN:
-  driver                     = plaintext
-  public_name                = PLAIN
-  server_set_id              = $auth2
-  server_prompts = :
-  server_condition = {{ '"${if pam{$auth2:${sg{$auth3}{:}{::}}}}"' }}
-  server_advertise_condition = {{ '${if def:tls_in_cipher }' }}
-
-LOGIN:
-  driver                     = plaintext
-  server_set_id              = $auth1
-  server_prompts             = "Username:: : Password::"
-  server_condition = {{ '"${if pam{$auth1:$auth2}{yes}{no}}"' }}
-  server_advertise_condition = {{ '${if def:tls_in_cipher }' }}
+  driver = dovecot
+  public_name = PLAIN
+  server_socket = /var/run/dovecot/exim-auth
+  server_set_id = $auth1
+  server_advertise_condition = ${if def:tls_in_cipher}
