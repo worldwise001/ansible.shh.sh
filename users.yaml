@@ -20,7 +20,7 @@
         system: no
         create_home: yes
         password: "{{ item.crypt }}"
-        update_password: on_create
+        update_password: always
         group: users
       loop: "{{ user_list }}"
     - name: add user .ssh
