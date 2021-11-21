@@ -1,0 +1,26 @@
+- hosts: all
+  tasks:
+    - name: add users
+      user:
+        name: "{{ item.username }}"
+        comment: "{{ item.username }}"
+        uid: "{{ item.uid }}"
+        system: no
+        create_home: yes
+        local: yes
+        password: "{{ item.crypt }}"
+        update_password: on_create
+        group: users
+      loop: "{{ user_list }}"
+    - name: add user .ssh
+      file:
+        name: /home/"{{ item.username }}"/.ssh
+        state: directory
+        owner: "{{ item.username }}"
+      loop: "{{ user_list }}"
+    - name: authorized_keys
+      copy:
+        content: "{{ item.authorized_keys }}"
+        dest: /home/"{{ item.username }}"/.ssh/authorized_keys
+        mode: '0600'
+      loop: "{{ user_list }}"
