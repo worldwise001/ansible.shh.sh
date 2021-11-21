@@ -1,5 +1,17 @@
 - hosts: all
   tasks:
+    - name: add group 'users'
+      group:
+        gid: 100
+        name: users
+        state: present
+        system: yes
+    - name: add group 'wheel'
+      group:
+        gid: 600
+        name: wheel
+        state: present
+        system: yes
     - name: add users
       user:
         name: "{{ item.username }}"
@@ -7,7 +19,6 @@
         uid: "{{ item.uid }}"
         system: no
         create_home: yes
-        local: yes
         password: "{{ item.crypt }}"
         update_password: on_create
         group: users
@@ -23,4 +34,5 @@
         content: "{{ item.authorized_keys }}"
         dest: /home/"{{ item.username }}"/.ssh/authorized_keys
         mode: '0600'
+        force: no
       loop: "{{ user_list }}"
