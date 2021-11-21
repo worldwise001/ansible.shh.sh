@@ -197,11 +197,11 @@ localuser:
 catchall_scan:
   driver = redirect
   condition = {{ '${if >{$spam_score_int}{50}{1}{0}}' }}
-  data = spam@lists.{{ domain }}
+  data = spam@{{ domain }}
 
 catchall:
   driver = redirect
-  data = catchall@lists.{{ domain }}
+  data = catchall@{{ domain }}
 
 ######################################################################
 #                      TRANSPORTS CONFIGURATION                      #
