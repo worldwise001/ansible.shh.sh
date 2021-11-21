@@ -301,12 +301,12 @@ PLAIN:
   public_name                = PLAIN
   server_set_id              = $auth2
   server_prompts = :
-  server_condition = {{ '"${if pam{$auth2:$auth3}{yes}{no}}"' }}
+  server_condition = {{ '"${if pam{$auth2:${sg{$auth3}{:}{::}}}}"' }}
   server_advertise_condition = {{ '${if def:tls_in_cipher }' }}
 
 LOGIN:
   driver                     = plaintext
   server_set_id              = $auth1
   server_prompts             = "Username:: : Password::"
-  server_condition = {{ '"${if pam{$auth1:$auth2}{yes}{no}}"' }}
+  server_condition = {{ '"${if pam{$auth1:${sg{$auth2}{:}{::}}}}"' }}
   server_advertise_condition = {{ '${if def:tls_in_cipher }' }}
