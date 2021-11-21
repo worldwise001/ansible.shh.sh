@@ -6,3 +6,4 @@
       debug:
         msg: "{{ item }}"
       loop: "{{ groups['all'] }}"
+      ignore_unreachable: yes
