@@ -4,20 +4,23 @@
       pacman:
         name:
           - certbot
-          - nginx
+          - certbot-dns-cloudflare
         state: latest
-      ignore_errors: yes
-    - name: stop nginx
-      systemd:
-        state: stopped
-        name: nginx
-      ignore_errors: yes
+    - name: ensure cloudflare api key
+      copy:
+        content: "{{ certbot_dns_ini }}"
+        dest: "{{ certbot_dns_ini_location }}"
+        mode: '0600'
     - name: create certificate
       command:
-        cmd: "certbot certonly --standalone -m postmaster@{{ domain }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %}"
+        cmd: "certbot certonly --standalone -m postmaster@{{ domain }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %} --dns-cloudflare-credentials {{ certbot_dns_ini_location }}"
         creates: /etc/letsencrypt
     - name: renew certificate
-      command: "certbot renew --authenticator standalone --agree-tos"
+      command: "certbot renew --authenticator standalone --agree-tos --dns-cloudflare-credentials {{ certbot_dns_ini_location }}"
+    - name: cleanup ini
+      file:
+        path: "{{ certbot_dns_ini_location }}"
+        state: absent
     - name: ensure ssl group
       group:
         name: ssl
