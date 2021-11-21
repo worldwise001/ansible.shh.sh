@@ -6,10 +6,12 @@
           - certbot
           - nginx
         state: latest
+      ignore_errors: yes
     - name: stop nginx
       systemd:
         state: stopped
         name: nginx
+      ignore_errors: yes
     - name: create certificate
       command:
         cmd: "certbot certonly --standalone -m postmaster@{{ domain }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %}"
@@ -53,3 +55,4 @@
       systemd:
         state: restarted
         name: nginx
+      ignore_errors: yes
