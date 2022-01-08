@@ -13,7 +13,7 @@
         mode: '0600'
     - name: create certificate
       command:
-        cmd: "certbot certonly --standalone --renew-by-default -m postmaster@{{ domain }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %} --dns-cloudflare-credentials {{ certbot_dns_ini_location }}"
+        cmd: "certbot certonly --standalone --renew-by-default -m postmaster@{{ domain }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %} --dns-cloudflare --dns-cloudflare-credentials {{ certbot_dns_ini_location }}"
     - name: cleanup ini
       file:
         path: "{{ certbot_dns_ini_location }}"
