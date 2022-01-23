@@ -2,6 +2,12 @@
   tasks:
     - name: clear cache
       shell: yes | pacman -Scc
+    - name: upgrade keyring
+      pacman:
+        state: latest
+        update_cache: yes
+        name:
+          - archlinux-keyring
     - name: upgrade system packages
       pacman:
         state: latest
