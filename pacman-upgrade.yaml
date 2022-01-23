@@ -1,5 +1,11 @@
 - hosts: all
   tasks:
+    - name: upgrade keyring
+      pacman:
+        state: latest
+        update_cache: yes
+        name:
+          - archlinux-keyring
     - name: upgrade packages
       pacman:
         update_cache: yes
