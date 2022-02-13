@@ -59,7 +59,7 @@ spf_test:
   # From authed users
   accept  authenticated = *
           condition = ${if eq{$authenticated_id}{${listextract{1}{<@ $sender_address}}}}
-          add_header = Received-SPF: pass (shh.sh: message originates from authenticated user)b
+          add_header = Received-SPF: pass (shh.sh: message originates from authenticated user)
 
   # No SPF record
   accept  !condition = {{ '${if def:acl_m_spf_record}' }}
@@ -213,7 +213,8 @@ remote_smtp:
   dkim_domain = {{ '${lc:${domain:$h_from:}}' }}
   dkim_selector = 20160724
   dkim_private_key = /etc/mail/dkim/dkim.{{ domain }}
-  dkim_canon = relaxed 
+  dkim_canon = relaxed
+  headers_remove = Received
 
 remote_smtp_rewrite:
   driver = smtp
@@ -222,7 +223,8 @@ remote_smtp_rewrite:
   dkim_domain = {{ '${lc:${domain:$h_from:}}' }}
   dkim_selector = 20160724
   dkim_private_key = /etc/mail/dkim/dkim.{{ domain }}
-  dkim_canon = relaxed 
+  dkim_canon = relaxed
+  headers_remove = Received
 
 local_delivery:
   driver = appendfile
