@@ -56,6 +56,11 @@ spf_test:
   accept  hosts = +relay_from_hosts
           add_header = Received-SPF: pass ({{ domain }}: {{ 'message originates from trusted relay) client-ip=${sender_host_address};' }}
 
+  # From authed users
+  accept  authenticated = *
+          condition = ${if eq{$authenticated_id}{${listextract{1}{<@ $sender_address}}}}
+          add_header = Received-SPF: pass (shh.sh: message originates from authenticated user)b
+
   # No SPF record
   accept  !condition = {{ '${if def:acl_m_spf_record}' }}
           add_header = Received-SPF: none ({{ domain }}: {{ '${sender_address} does not designate permitted sender hosts) client-ip=${sender_host_address};' }}
@@ -111,6 +116,12 @@ acl_check_rcpt:
   accept
 
 acl_check_data:
+  # From authed users
+  accept  authenticated = *
+          condition = ${if eq{$authenticated_id}{${listextract{1}{<@ $sender_address}}}}
+          add_header = X-Spam-Score: 0.0 (-)\n\
+                       X-Spam-Status: 0
+
   warn    spam       = nobody:true
           add_header = X-Spam-Score: $spam_score ($spam_bar)\n\
                        X-Spam-Report: $spam_report\n\
@@ -137,25 +148,10 @@ dnslookup:
   ignore_target_hosts = 0.0.0.0 : 127.0.0.0/8 ; ::1
   no_more
 
-listserv_scan:
-  driver = redirect
-  domains = +list_domains
-  condition = {{ '${if and{ {>{$spam_score_int}{50}} {!eq{$local_part}{"spam"}} }{1}{0}}' }}
-  data = spam@lists.{{ domain }}
-
-listserv:
-  driver = accept
-  domains = +list_domains
-  require_files = {{ '/var/lib/mailman/lists/${lc::$local_part}/config.pck' }}
-  local_part_suffix = -admin : -bounces : -bounces+* : -confirm : -confirm+* : -join : -leave : -owner : -request : -subscribe : -unsubscribe
-  local_part_suffix_optional
-  transport = mailman
-  no_more
-
 listserv_catch:
   driver = redirect
-  domains = lists.{{ domain }}
-  data = mailman@lists.{{ domain }}
+  domains = +list_domains
+  data = postmaster+listserv@shh.sh
 
 rewrite_router:
   domains = +local_domains
@@ -211,14 +207,6 @@ catchall:
 ######################################################################
 
 begin transports
-
-mailman:
-  driver = pipe
-  user = mailman
-  group = mailman
-  home_directory = /usr/lib/mailman
-  current_directory = /usr/lib/mailman
-  command = /usr/lib/mailman/mail/mailman {{ "'${if def:local_part_suffix {${sg{$local_part_suffix}{-(\\\\w+)(\\\\+.*)?}{\\$1}}}{post}}'" }} $local_part
 
 remote_smtp:
   driver = smtp
