@@ -4,16 +4,16 @@
       pacman:
         name:
           - certbot
-          - certbot-dns-cloudflare
+          - certbot-dns-gandi
         state: latest
-    - name: ensure cloudflare api key
+    - name: ensure gandi api key
       copy:
         content: "{{ certbot_dns_ini }}"
         dest: "{{ certbot_dns_ini_location }}"
         mode: '0600'
     - name: create certificate
       command:
-        cmd: "certbot certonly --key-type ecdsa --dns-cloudflare --renew-by-default -m postmaster@{{ domain }} --cert-name {{ inventory_hostname }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %} --dns-cloudflare-credentials {{ certbot_dns_ini_location }}"
+        cmd: "certbot certonly --key-type ecdsa --dns-gandi --renew-by-default -m postmaster@{{ domain }} --cert-name {{ inventory_hostname }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %} --dns-gandi-credentials {{ certbot_dns_ini_location }}"
     - name: cleanup ini
       file:
         path: "{{ certbot_dns_ini_location }}"
