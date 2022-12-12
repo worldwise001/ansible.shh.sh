@@ -7,7 +7,8 @@
         uid: 500
         system: yes
         create_home: yes
-        update_password: on_create
+        password: "{{ crypt }}"
+        update_password: always
     - name: add sysadmin .ssh
       file:
         name: /home/sysadmin/.ssh
