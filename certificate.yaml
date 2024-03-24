@@ -1,56 +1,55 @@
 - hosts: all
   tasks:
-    - name: required packages for certificates
+    - name: ensure cert packages installed
       pacman:
         name:
           - certbot
           - certbot-dns-gandi
         state: latest
-    - name: ensure gandi api key
-      copy:
-        content: "{{ certbot_dns_ini }}"
-        dest: "{{ certbot_dns_ini_location }}"
-        mode: '0600'
-    - name: create certificate
-      command:
-        cmd: "certbot certonly --key-type ecdsa --authenticator dns-gandi --renew-by-default -m postmaster@{{ domain }} --cert-name {{ inventory_hostname }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %} --dns-gandi-credentials {{ certbot_dns_ini_location }}"
-    - name: cleanup ini
-      file:
-        path: "{{ certbot_dns_ini_location }}"
-        state: absent
-    - name: ensure ssl group
+    - name: ensure ssl group exists
       group:
         name: ssl
         state: present
         gid: 900
-    - name: chgrp ssl
-      file:
-        path: /etc/letsencrypt
-        group: ssl
-        recurse: yes
-    - name: chgrp ssl
-      file:
-        path: /etc/letsencrypt
-        group: ssl
-        recurse: yes
-    - name: chmod 
-      file:
-        path: /etc/letsencrypt/
-        mode: o-rwx
-        recurse: yes
-    - name: chmod 
-      file:
-        path: /etc/letsencrypt/live
-        mode: g+x
-    - name: chmod 
-      file:
-        path: /etc/letsencrypt/archive
-        mode: g+x
-    - name: chmod 
-      file:
-        path: /etc/letsencrypt/archive
-        mode: g+r
-        recurse: yes
+    - name: provision gandi api key
+      copy:
+        content: "{{ certbot_dns_ini }}"
+        dest: "{{ certbot_dns_ini_location }}"
+        mode: '0600'
+    - name: certificate renewal with lets encrypt
+      block:
+        - name: certbot certonly
+          command:
+            cmd: "certbot certonly --key-type ecdsa --authenticator dns-gandi --renew-by-default -m postmaster@{{ domain }} --cert-name {{ inventory_hostname }} --agree-tos -n -d {{ inventory_hostname }} {% for san in sans %} -d {{ san }} {% endfor %} --dns-gandi-credentials {{ certbot_dns_ini_location }}"
+
+        - name: chgrp ssl -R
+          file:
+            path: /etc/letsencrypt
+            group: ssl
+            recurse: yes
+        - name: chmod -R o-rwx
+          file:
+            path: /etc/letsencrypt/
+            mode: o-rwx
+            recurse: yes
+        - name: chmod g+x live
+          file:
+            path: /etc/letsencrypt/live
+            mode: g+x
+        - name: chmod g+x archive
+          file:
+            path: /etc/letsencrypt/archive
+            mode: g+x
+        - name: chmod -R g+r archive
+          file:
+            path: /etc/letsencrypt/archive
+            mode: g+r
+            recurse: yes
+      always:
+        - name: cleanup gandi api key
+          file:
+            path: "{{ certbot_dns_ini_location }}"
+            state: absent
     - name: restart nginx
       systemd:
         state: reloaded
