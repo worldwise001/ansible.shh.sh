@@ -22,6 +22,11 @@
           - systemd
           - systemd-sysvcompat
           - libsystemd
+          - openssl
+          - coreutils
+          - gcc
+          - gcc-libs
+          - util-linux
     - name: Reboot to get new kernel
       reboot:
         reboot_timeout: 3600
