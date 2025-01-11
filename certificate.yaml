@@ -8,6 +8,7 @@
     - name: ensure certbot-plugin-gandi installed
       ansible.builtin.pip:
         name: certbot-plugin-gandi==1.5.0
+        executable: /root/.pyenv/versions/3.11.10/bin/pip
     - name: ensure ssl group exists
       group:
         name: ssl
