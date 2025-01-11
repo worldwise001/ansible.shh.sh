@@ -1,11 +1,13 @@
 - hosts: all
   tasks:
-    - name: ensure cert packages installed
+    - name: ensure certbot installed
       pacman:
         name:
           - certbot
-          - certbot-dns-gandi
         state: latest
+    - name: ensure certbot-plugin-gandi installed
+      ansible.builtin.pip:
+        name: certbot-plugin-gandi==1.5.0
     - name: ensure ssl group exists
       group:
         name: ssl
