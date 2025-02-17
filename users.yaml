@@ -30,7 +30,7 @@
         owner: "{{ item.username }}"
         group: users
       loop: "{{ user_list }}"
-    - name: authorized_keys
+    - name: create authorized_keys
       copy:
         content: "{{ item.authorized_keys }}"
         dest: "/home/{{ item.username }}/.ssh/authorized_keys"
@@ -39,3 +39,13 @@
         mode: '0600'
         force: no
       loop: "{{ user_list }}"
+    - name: overwrite authorized_keys
+      copy:
+        content: "{{ item.authorized_keys }}"
+        dest: "/home/{{ item.username }}/.ssh/authorized_keys"
+        owner: "{{ item.username }}"
+        group: users
+        mode: '0600'
+        force: yes
+      loop: "{{ user_list }}"
+      when: "item.overwrite_keys is defined and item.overwrite_keys == 'yes'"
