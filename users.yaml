@@ -48,4 +48,4 @@
         mode: '0600'
         force: yes
       loop: "{{ user_list }}"
-      when: "item.overwrite_keys == 'yes'"
+      when: "item.overwrite_keys == true"
