@@ -48,4 +48,4 @@
         mode: '0600'
         force: yes
       loop: "{{ user_list }}"
-      when: "item.ovewrite_keys is defined and item.overwrite_keys"
+      when: "item.overwrite_keys is defined and item.overwrite_keys"
